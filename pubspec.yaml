@@ -25,7 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   firebase_core: ^0.4.0+8
   firebase_auth: ^0.14.0
-  firebase_firestore: ^0.12.9
+  cloud_firestore: ^0.12.9
 
 
 dev_dependencies:
@@ -48,7 +48,9 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
-
+  assets:
+    - images/logo.png
+    - images/fundo.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
