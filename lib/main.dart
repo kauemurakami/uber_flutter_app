@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uberflutterapp/routes/routes.dart';
 import 'package:uberflutterapp/telas/home.dart';
 
 
@@ -9,4 +10,7 @@ final ThemeData temaPadrao = ThemeData(
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
   home: Home(),
+  theme: temaPadrao,
+  initialRoute: Routes.ROUTE_ROOT,
+  onGenerateRoute: Routes.routeGenerator,
 ));

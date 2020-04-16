@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uberflutterapp/routes/routes.dart';
 
-import 'cadastro.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -95,11 +95,9 @@ class _HomeState extends State<Home> {
                       )
                     ),
                     onTap: (){
-                      Navigator.push(
+                      Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                           builder: (context) => Cadastro()
-                          )
+                          Routes.ROUTE_CADASTRO
                       );
                     },
                   ),
