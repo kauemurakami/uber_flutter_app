@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uberflutterapp/model/usuario.dart';
+import 'package:uberflutterapp/routes/routes.dart';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -22,9 +23,9 @@ class _CadastroState extends State<Cadastro> {
     String email = _controllerEmail.text;
     String senha = _controllerSenha.text;
     //validar
-    if (nome.isEmpty) {
+    if (nome.isNotEmpty) {
       if (email.isNotEmpty && email.contains('@')) {
-        if (senha.isEmpty && senha.length > 6) {
+        if (senha.isNotEmpty && senha.length > 6) {
           Usuario usuario = Usuario();
           usuario.nome = nome;
           usuario.email = email;
@@ -49,7 +50,7 @@ class _CadastroState extends State<Cadastro> {
       });
     }
   }
-  _cadastrarUsuario(Usuario usuario){
+  _cadastrarUsuario(Usuario usuario) async{
     Firestore db = Firestore.instance;
     FirebaseAuth auth = FirebaseAuth.instance;
     auth.createUserWithEmailAndPassword(
@@ -59,6 +60,23 @@ class _CadastroState extends State<Cadastro> {
           db.collection("usuarios")
               .document(firebaseUser.user.uid)
               .setData(usuario.toMap());
+
+          //redireciona a respectivo painel
+          switch(usuario.tipoUsuario){
+            case "motorista":
+              Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.ROUTE_PAINEL_MOTORISTA,
+                      (_) => false);
+              break;
+            case "passageiro":
+              Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.ROUTE_PAINEL_PASSAGEIRO,
+                      (_) => false);
+              break;
+          }
+
         });
   }
     @override
@@ -109,7 +127,8 @@ class _CadastroState extends State<Cadastro> {
                   ),
                   TextField(
                     controller: _controllerSenha,
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
                     style: TextStyle(
                         fontSize: 20
                     ),
@@ -153,7 +172,7 @@ class _CadastroState extends State<Cadastro> {
                       color: Color(0xff1ebbd8),
                       padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       onPressed: () {
-
+                        _validarCampos();
                       },
                     ),
                   ),
