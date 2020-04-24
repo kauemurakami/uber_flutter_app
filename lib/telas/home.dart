@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uberflutterapp/model/usuario.dart';
 import 'package:uberflutterapp/routes/routes.dart';
 
 class Home extends StatefulWidget {
@@ -11,6 +13,47 @@ class _HomeState extends State<Home> {
 
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
+  String _mensagemErro = "";
+
+  _validarCampos() {
+    //recuperar dados dos campos
+    String email = _controllerEmail.text;
+    String senha = _controllerSenha.text;
+    //validar
+      if (email.isNotEmpty && email.contains('@')) {
+        if (senha.isNotEmpty && senha.length > 6) {
+          Usuario usuario = Usuario();
+          usuario.email = email;
+          usuario.senha = senha;
+
+          _logarUsuario(usuario);
+
+        } else {
+          setState(() {
+            _mensagemErro = "Informe uma senha com mais de 6 digitos";
+          });
+        }
+      } else {
+        setState(() {
+          _mensagemErro = "Informe um email válido";
+        });
+      }
+  }
+  _logarUsuario(Usuario usuario){
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.signInWithEmailAndPassword(
+        email: usuario.email,
+        password: usuario.senha
+    ).then(
+        (firebaseUser){
+          Navigator.pushReplacementNamed(
+              context,
+              Routes.ROUTE_PAINEL_PASSAGEIRO
+          );
+        }).catchError((onError){
+          _mensagemErro = "Erro ao autenticar usuário, verifique email e senha";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +98,8 @@ class _HomeState extends State<Home> {
                 ),
                 TextField(
                   controller: _controllerSenha,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
                   style: TextStyle(
                       fontSize: 20
                   ),
@@ -82,7 +126,7 @@ class _HomeState extends State<Home> {
                     color: Color(0xff1ebbd8),
                     padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     onPressed: (){
-
+                      _validarCampos();
                     },
                   ),
                 ),
@@ -106,7 +150,7 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.only(top: 16),
                   child: Center(
                     child: Text(
-                        "Erro",
+                      _mensagemErro,
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: 20

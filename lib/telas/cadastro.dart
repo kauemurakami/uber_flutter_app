@@ -77,6 +77,8 @@ class _CadastroState extends State<Cadastro> {
               break;
           }
 
+        }).catchError((onError){
+          _mensagemErro = "Erro ao cadastrar usuário, verifique os campos e tente novamente";
         });
   }
     @override
