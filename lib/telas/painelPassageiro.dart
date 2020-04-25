@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,6 +12,9 @@ class PainelPassageiro extends StatefulWidget {
 }
 
 class _PainelPassageiroState extends State<PainelPassageiro> {
+
+  TextEditingController _controllerLocal = TextEditingController();
+
   CameraPosition _posicaoCamera = CameraPosition(
   target: LatLng(-23.563999, -46.653256),);
 
@@ -115,11 +119,101 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
         ],
       ),
       body: Container(
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: _posicaoCamera,
-          onMapCreated: _onMapCreated,
-        ),
+        child: Stack(
+          children: <Widget>[
+            GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: _posicaoCamera,
+              onMapCreated: _onMapCreated,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border : Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(3),
+                    color: Colors.white
+                  ),
+                  child: TextField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      icon: Container(
+                        margin: EdgeInsets.only(left: 20, bottom: 15),
+                        width: 10,
+                        height: 10,
+                        child: Icon(Icons.location_on, color: Colors.green ,),
+                      ),
+                      hintText: "Meu Local",
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 15, top: 15, bottom: 15)
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 55,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      border : Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(3),
+                      color: Colors.white
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        icon: Container(
+                          margin: EdgeInsets.only(left: 20, bottom: 15),
+                          width: 10,
+                          height: 10,
+                          child: Icon(Icons.local_taxi, color: Colors.grey ,),
+                        ),
+                        hintText: "Digite seu destino",
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15, top: 15, bottom: 15)
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              left: 0,
+              bottom: 0,
+              child: Padding(
+                padding: Platform.isIOS ? EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 25)
+                : EdgeInsets.all(10),
+                child: RaisedButton(
+                  child: Text(
+                    "Chamar Uber",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20
+                    ),
+                  ),
+                  color: Color(0xff1ebbd8),
+                  padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                  onPressed: (){
+
+                  },
+                ),
+              ),
+            )
+          ],
+        )
       ),
     );
   }
